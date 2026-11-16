@@ -1,178 +1,41 @@
 (function () {
-  let POST_URL = "https://isekaitracker.runeprojects.com.br/api/isekai/scrobble";
-  let BEAT_URL = "https://isekaitracker.runeprojects.com.br/api/isekai/beat";
-
+  // Tracking starts disabled and remains local until secure account pairing exists.
+  let enabled = false;
+  let contextValid = true;
+  let routeTimer = null;
+  const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+  const L = () => {};
   const MIN_CHUNK = 5;
   const CHECKPOINT = 30;
-  // O painel recebe estado local a cada 500 ms, mas o servidor não precisa disso.
-  // Um heartbeat a cada 15 s durante reprodução é suficiente para presença.
   const BEAT_THROTTLE_MS = 15000;
-
-  const LOG = true;
-  const L = (m,o)=>{ try{ console.log("[Isekai]",m,o||""); }catch(_){} };
-
-  const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
-
-  // =========================
-  // ⚙️ ENDPOINT CONFIGURATION & QUEUE
-  // =========================
-  async function updateEndpoints() {
-    try {
-      const data = await chrome.storage.local.get(["apiType", "customUrl"]);
-      const type = data.apiType || "production";
-      let base = "https://isekaitracker.runeprojects.com.br";
-      if (type === "local") {
-        base = "http://localhost:3005";
-      } else if (type === "custom" && data.customUrl) {
-        base = data.customUrl.replace(/\/$/, "");
-      }
-      POST_URL = `${base}/api/isekai/scrobble`;
-      BEAT_URL = `${base}/api/isekai/beat`;
-      L(`🎯 Endpoints atualizados: ${base}`);
-    } catch (e) {
-      L("⚠️ Erro ao ler endpoints do storage, usando fallback padrão", e);
-    }
+  const POST_URL = "";
+  const BEAT_URL = "";
+  function post() {}
+  function stopInvalidContext() {
+    contextValid = false;
+    enabled = false;
+    if (videoTicker) clearInterval(videoTicker);
+    if (routeTimer) clearInterval(routeTimer);
   }
-
-  // Monitorar mudanças nas configurações em tempo real
-  try {
-    chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === "local" && (changes.apiType || changes.customUrl)) {
-        updateEndpoints();
-      }
-    });
-  } catch (e) {}
-
-  async function queueFailedScrobble(url, payload) {
-    if (payload.action === "beat" || url.includes("beat")) return;
+  function emitBg(type, payload) {
+    if (!enabled || !contextValid) return;
     try {
-      const data = await chrome.storage.local.get("scrobble_queue");
-      const queue = data.scrobble_queue || [];
-
-      // Evitar duplicados no mesmo timestamp/episódio se possível
-      const isDup = queue.some(q => q.payload.action === payload.action &&
-                                   q.payload.meta?.episodeTitle === payload.meta?.episodeTitle &&
-                                   Math.abs(q.ts - Date.now()) < 5000);
-      if (isDup) return;
-
-      if (queue.length >= 50) {
-        queue.shift();
-      }
-      queue.push({
-        id: Math.random().toString(36).substring(2, 9) + Date.now(),
-        url,
-        payload,
-        ts: Date.now()
+      if (!chrome.runtime?.id) { stopInvalidContext(); return; }
+      chrome.runtime.sendMessage({ _isekai: true, type, payload }).catch(() => {
+        if (!chrome.runtime?.id) stopInvalidContext();
       });
-      await chrome.storage.local.set({ scrobble_queue: queue });
-      L("📦 Scrobble enfileirado localmente (Offline)", payload);
-      emitBg("queue_update", { count: queue.length });
-    } catch (e) {
-      L("❌ Erro ao salvar scrobble na fila offline", e);
+    } catch (_) {
+      stopInvalidContext();
     }
   }
-
-  let flushing = false;
-  async function flushQueue() {
-    if (flushing) return;
-    flushing = true;
-    try {
-      const data = await chrome.storage.local.get("scrobble_queue");
-      const queue = data.scrobble_queue || [];
-      if (queue.length === 0) {
-        flushing = false;
-        return;
-      }
-      L(`⏳ Tentando reenviar ${queue.length} scrobbles pendentes da fila offline...`);
-      const remaining = [];
-      for (const item of queue) {
-        let success = false;
-        try {
-          let targetUrl = item.url;
-          if (item.url.includes("scrobble")) {
-            targetUrl = POST_URL;
-          } else if (item.url.includes("beat")) {
-            targetUrl = BEAT_URL;
-          }
-
-          const res = await fetch(targetUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(item.payload)
-          });
-          if (res.ok) {
-            success = true;
-            L("✅ Scrobble pendente enviado com sucesso!", item.payload);
-          }
-        } catch (err) {
-          L("❌ Falha no reenvio do scrobble", err);
-        }
-        if (!success) {
-          remaining.push(item);
-        }
-      }
-      await chrome.storage.local.set({ scrobble_queue: remaining });
-      emitBg("queue_update", { count: remaining.length });
-    } catch (e) {
-      L("❌ Erro ao processar fila offline", e);
-    } finally {
-      flushing = false;
-    }
-  }
-
-  // =========================
-  // 🔎 FIND VIDEO (ANTI CR)
-  // =========================
   function findVideo() {
-    let v = document.querySelector("video");
-    if (v) return v;
-
-    // fallback futuro
-    const all = document.querySelectorAll("*");
-    for (const el of all) {
-      if (el.shadowRoot) {
-        const vv = el.shadowRoot.querySelector("video");
-        if (vv) return vv;
-      }
+    const direct = document.querySelector("video");
+    if (direct) return direct;
+    for (const el of document.querySelectorAll("*")) {
+      const video = el.shadowRoot?.querySelector("video");
+      if (video) return video;
     }
-
     return null;
-  }
-
-  // =========================
-  // 📡 POST
-  // =========================
-  async function post(url, payload, urgent) {
-    if (LOG) L("POST", payload);
-
-    let success = false;
-    try {
-      if (urgent && navigator.sendBeacon) {
-        const ok = navigator.sendBeacon(url, new Blob([JSON.stringify(payload)], { type: "application/json" }));
-        if (ok) return;
-      }
-
-      const res = await fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (res.ok) {
-        success = true;
-      }
-    } catch (_) {}
-
-    if (success) {
-      flushQueue();
-    } else {
-      if (payload.action && payload.action !== "beat" && !url.includes("beat")) {
-        queueFailedScrobble(url, payload);
-      }
-    }
-  }
-
-  function emitBg(type, payload){
-    try { chrome.runtime?.sendMessage({ _isekai:true, type, payload }); } catch(_){}
   }
 
   function parseSeasonNumber(value) {
@@ -447,15 +310,18 @@
     }, 500);
 
     video.addEventListener("play", ()=>{
+      if (!enabled || video !== v) return;
       hb.status="playing";
       beginRemoteSession();
     });
     video.addEventListener("pause", ()=>{
+      if (!enabled || video !== v) return;
       hb.status="paused";
       checkpoint("pause");
       if(current) current.remoteStarted=false;
     });
     video.addEventListener("ended", ()=>{
+      if (!enabled || video !== v) return;
       hb.status="paused";
       checkpoint("ended");
       if(current) current.remoteStarted=false;
@@ -467,10 +333,22 @@
   // =========================
   async function init(){
     L("🚀 INIT");
-    await updateEndpoints();
-    await flushQueue();
+    const settings = await chrome.storage.local.get("trackingConsentV2");
+    enabled = settings.trackingConsentV2 === true;
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === "local" && changes.trackingConsentV2) {
+        enabled = changes.trackingConsentV2.newValue === true;
+        if (!enabled) {
+          video = null;
+          current = null;
+          if (videoTicker) clearInterval(videoTicker);
+          videoTicker = null;
+        }
+      }
+    });
 
-    while(true){
+    while(contextValid){
+      if (!enabled) { await sleep(1000); continue; }
       const v = findVideo();
 
       if(v && v !== video){
@@ -490,7 +368,7 @@
   // SPA DETECT
   // =========================
   let lastUrl = location.href;
-  setInterval(()=>{
+  routeTimer = setInterval(()=>{
     if(location.href !== lastUrl){
       lastUrl = location.href;
       L("🔁 route change");
@@ -501,6 +379,6 @@
     }
   },1000);
 
-  init();
+  init().catch(() => stopInvalidContext());
 
 })();

@@ -1,20 +1,11 @@
-# Rune Projects Hub — extensão do IsekaiTracker
+# Isekai;Tracker — extensão de navegador
 
-Extensão de navegador com painel lateral para acessar os projetos Rune e acompanhar episódios assistidos no Crunchyroll. Esta cópia recuperada é a versão **1.1.2**.
+Versão 2.0.0 em desenvolvimento: painel lateral para acompanhar localmente episódios no Crunchyroll, mediante autorização. O acompanhamento começa desativado e pode ser desligado no painel. A sincronização com servidor está desativada até existir pareamento seguro e isolamento entre contas.
 
-## Instalação para teste
+## Testar
 
-1. Baixe ou clone este repositório.
-2. Abra a página de extensões do Chrome ou Edge e ative o **Modo do desenvolvedor**.
-3. Selecione **Carregar sem compactação** e escolha a pasta que contém `manifest.json`.
-4. Clique no ícone da extensão para abrir o painel lateral. Abra um episódio no Crunchyroll para testar o rastreamento.
+Carregue esta pasta sem compactação no Chrome ou Edge, abra o painel e autorize o acompanhamento. Reproduza um episódio na Crunchyroll e confira o estado e o histórico. Desative o acompanhamento e use **Limpar dados** para remover o histórico e a fila antiga. Se o player não for detectado, recarregue a página.
 
-Por padrão, a extensão envia eventos de reprodução para `https://isekaitracker.runeprojects.com.br`. O painel também oferece configuração para servidor local ou personalizado. O funcionamento com os serviços atuais ainda precisa de validação de ponta a ponta.
+## Privacidade e publicação
 
-## Privacidade e limitações
-
-A extensão lê informações do episódio e da reprodução no Crunchyroll, envia eventos ao servidor configurado e mantém informações recentes no armazenamento do navegador. Veja [privacidade](privacy_policy.html). Antes de uso compartilhado, é necessário verificar como o servidor identifica usuários e restringe o acesso aos eventos; a implementação local examinada anteriormente retransmitia eventos sem isolamento por conta.
-
-[Site do IsekaiTracker](https://isekaitracker.runeprojects.com.br/) · [Projeto IsekaiTracker](https://github.com/guilhermealceu/isekaitracker-nextgen8) · [Licença MIT](LICENSE)
-
-O painel abre na aba Isekai;Tracker; a aba Projetos permanece vazia enquanto a lista é revisada. Para voltar à organização anterior, recupere o arquivo `sidepanel.html` do commit anterior.
+O painel e [privacidade](privacy_policy.html) descrevem os dados locais. Permissões são restritas ao armazenamento, painel lateral e páginas da Crunchyroll. Não há envio de progresso nesta versão. Antes de publicar, valide o fluxo completo, forneça uma política pública com responsável e contato, e revise as exigências atuais da loja. Para reverter, use o commit anterior no Git; preservar a cópia local de teste antes de substituir arquivos.

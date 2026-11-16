@@ -59,86 +59,6 @@ function fmtSec(s) {
   return parts.join(" ");
 }
 
-async function getBaseUrl() {
-  if (typeof chrome === 'undefined' || !chrome.storage) return "https://isekaitracker.runeprojects.com.br";
-  const data = await chrome.storage.local.get(["apiType", "customUrl"]);
-  const type = data.apiType || "production";
-  if (type === "local") return "http://localhost:3005";
-  if (type === "custom" && data.customUrl) return data.customUrl.replace(/\/$/, "");
-  return "https://isekaitracker.runeprojects.com.br";
-}
-
-// Ping connectivity
-async function runPing() {
-  const el = document.getElementById("isekai-conn-status");
-  if (!el) return;
-  el.className = "isekai-ping-dot isekai-checking";
-  el.textContent = "Verificando...";
-  const base = await getBaseUrl();
-  try {
-    const ctrl = new AbortController();
-    const t = setTimeout(() => ctrl.abort(), 4000);
-    await fetch(base, { method: "GET", mode: "no-cors", signal: ctrl.signal });
-    clearTimeout(t);
-    el.className = "isekai-ping-dot isekai-online";
-    el.textContent = "Online";
-  } catch {
-    el.className = "isekai-ping-dot isekai-offline";
-    el.textContent = "Indisponível";
-  }
-}
-
-// Queue handling
-async function checkQueue() {
-  if (typeof chrome === 'undefined' || !chrome.storage) return;
-  try {
-    const data = await chrome.storage.local.get("scrobble_queue");
-    const count = (data.scrobble_queue || []).length;
-    setQueueUI(count);
-  } catch {}
-}
-
-function setQueueUI(count) {
-  const box = document.getElementById("isekai-queue-box");
-  const txt = document.getElementById("isekai-queue-text");
-  if (!box || !txt) return;
-  if (count > 0) {
-    box.classList.add("show");
-    txt.textContent = `${count} scrobble${count !== 1 ? "s" : ""} offline pendente${count !== 1 ? "s" : ""}`;
-  } else {
-    box.classList.remove("show");
-  }
-}
-
-async function flushQueue() {
-  if (typeof chrome === 'undefined' || !chrome.storage) return;
-  const btn = document.getElementById("isekai-btn-flush");
-  if (btn) { btn.textContent = "Enviando..."; btn.disabled = true; }
-  try {
-    const data = await chrome.storage.local.get("scrobble_queue");
-    const queue = data.scrobble_queue || [];
-    const base = await getBaseUrl();
-    const url = `${base}/api/isekai/scrobble`;
-    const remaining = [];
-    for (const item of queue) {
-      try {
-        const res = await fetch(url, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(item.payload)
-        });
-        if (!res.ok) remaining.push(item);
-      } catch { remaining.push(item); }
-    }
-    await chrome.storage.local.set({ scrobble_queue: remaining });
-    setQueueUI(remaining.length);
-  } catch (e) {
-    console.error("[Isekai] flush error", e);
-  } finally {
-    if (btn) { btn.textContent = "Sincronizar"; btn.disabled = false; }
-  }
-}
-
 // Load and render active tab now-playing data
 async function loadIsekaiState() {
   if (typeof chrome === 'undefined' || !chrome.storage || !activeTabId) return;
@@ -223,51 +143,6 @@ function handleAutoTabSwitch(cur) {
   }
 }
 
-// Settings initialization
-async function initIsekaiSettings() {
-  if (typeof chrome === 'undefined' || !chrome.storage) return;
-
-  const btn = document.getElementById("isekai-btn-settings");
-  const drawer = document.getElementById("isekai-settings-panel");
-  const seg = document.getElementById("isekai-server-selector");
-  const input = document.getElementById("isekai-input-url");
-
-  btn?.addEventListener("click", () => {
-    const open = drawer.classList.toggle("open");
-    btn.classList.toggle("is-open", open);
-    if (open) runPing();
-  });
-
-  const data = await chrome.storage.local.get(["apiType", "customUrl"]);
-  const saved = data.apiType || "production";
-  if (input) {
-    input.value = data.customUrl || "";
-    input.style.display = saved === "custom" ? "block" : "none";
-  }
-
-  seg?.querySelectorAll("button").forEach(b => {
-    b.classList.toggle("active", b.dataset.type === saved);
-    b.addEventListener("click", async () => {
-      seg.querySelectorAll("button").forEach(x => x.classList.remove("active"));
-      b.classList.add("active");
-      await chrome.storage.local.set({ apiType: b.dataset.type });
-      if (input) input.style.display = b.dataset.type === "custom" ? "block" : "none";
-      runPing();
-    });
-  });
-
-  if (input) {
-    let debounce;
-    input.addEventListener("input", () => {
-      clearTimeout(debounce);
-      debounce = setTimeout(async () => {
-        await chrome.storage.local.set({ customUrl: input.value.trim() });
-        runPing();
-      }, 500);
-    });
-  }
-}
-
 // Active Tab Tracking
 async function updateActiveTabId() {
   if (typeof chrome !== 'undefined' && chrome.tabs) {
@@ -281,96 +156,49 @@ async function updateActiveTabId() {
   }
 }
 
-// Render Recently Watched History
+// Local history, with text inserted safely.
 async function loadIsekaiHistory() {
-  if (typeof chrome === 'undefined' || !chrome.storage) return;
-
   const container = document.getElementById("isekai-history-container");
   const list = document.getElementById("isekai-history-list");
-  if (!container || !list) return;
-
-  try {
-    const data = await chrome.storage.local.get("isekai_history");
-    const history = data.isekai_history || [];
-
-    if (history.length === 0) {
-      container.style.display = "none";
-      return;
+  const { isekai_history = [] } = await chrome.storage.local.get("isekai_history");
+  list.replaceChildren();
+  container.style.display = isekai_history.length ? "block" : "none";
+  for (const item of isekai_history) {
+    const row = document.createElement("div"); row.className = "isekai-history-item";
+    const header = document.createElement("div"); header.className = "isekai-hist-header";
+    const title = document.createElement("span"); title.className = "isekai-hist-title"; title.textContent = item.seriesTitle || "Anime";
+    const badges = document.createElement("div"); badges.className = "isekai-hist-badges";
+    for (const label of [item.seasonNumber != null ? `T${item.seasonNumber}` : null, item.episodeNumber != null ? `E${item.episodeNumber}` : null]) {
+      if (!label) continue; const badge = document.createElement("span"); badge.className = "isekai-hist-badge"; badge.textContent = label; badges.append(badge);
     }
-
-    container.style.display = "block";
-    list.innerHTML = "";
-
-    history.forEach(item => {
-      const el = document.createElement("a");
-      el.href = item.url || "#";
-      el.target = "_blank";
-      el.className = "isekai-history-item";
-
-      const pct = item.durationSec > 0 ? Math.min(100, Math.floor(item.positionSec * 100 / item.durationSec)) : 0;
-
-      el.innerHTML = `
-        <div class="isekai-hist-header">
-          <span class="isekai-hist-title">${item.seriesTitle}</span>
-          <div class="isekai-hist-badges">
-            ${item.seasonNumber != null ? `<span class="isekai-hist-badge">T${item.seasonNumber}</span>` : ""}
-            ${item.episodeNumber != null ? `<span class="isekai-hist-badge">E${item.episodeNumber}</span>` : ""}
-          </div>
-        </div>
-        <div class="isekai-hist-ep">${item.episodeTitle || "—"}</div>
-        <div class="isekai-hist-progress">
-          <div class="isekai-hist-track">
-            <div class="isekai-hist-fill" style="width: ${pct}%"></div>
-          </div>
-          <div class="isekai-hist-labels">
-            <span>Parou em: ${fmtSec(item.positionSec)}</span>
-            <span>${pct}%</span>
-          </div>
-        </div>
-      `;
-
-      list.appendChild(el);
-    });
-  } catch (e) {
-    console.error("[Isekai] Error loading history:", e);
+    header.append(title, badges);
+    const episode = document.createElement("div"); episode.className = "isekai-hist-ep"; episode.textContent = item.episodeTitle || "—";
+    const progress = document.createElement("div"); progress.className = "isekai-hist-progress";
+    const track = document.createElement("div"); track.className = "isekai-hist-track";
+    const fill = document.createElement("div"); fill.className = "isekai-hist-fill";
+    const pct = item.durationSec > 0 ? Math.min(100, Math.floor(item.positionSec * 100 / item.durationSec)) : 0; fill.style.width = `${pct}%`; track.append(fill);
+    const labels = document.createElement("div"); labels.className = "isekai-hist-labels";
+    const position = document.createElement("span"); position.textContent = `Parou em: ${fmtSec(item.positionSec)}`;
+    const percent = document.createElement("span"); percent.textContent = `${pct}%`; labels.append(position, percent); progress.append(track, labels); row.append(header, episode, progress); list.append(row);
   }
 }
-
-// Initialization and bindings
-document.addEventListener("DOMContentLoaded", () => {
-  if (typeof chrome !== 'undefined') {
-    updateActiveTabId();
-    initIsekaiSettings();
-    checkQueue();
-    loadIsekaiHistory(); // Load history on startup
-
-    document.getElementById("isekai-btn-flush")?.addEventListener("click", flushQueue);
-
-    // Listen to changes in chrome storage (offline queue, sessions and history)
-    chrome.storage.onChanged.addListener((changes, area) => {
-      if (area === "local") {
-        if (changes.scrobble_queue) {
-          setQueueUI((changes.scrobble_queue.newValue || []).length);
-        }
-        if (changes.isekai_history) {
-          loadIsekaiHistory();
-        }
-      }
-      if (area === "session" && activeTabId) {
-        if (changes["tab:" + activeTabId]) {
-          loadIsekaiState();
-        }
-      }
-    });
-
-    // Listen to active tab shifts
-    chrome.tabs.onActivated.addListener(() => {
-      updateActiveTabId();
-    });
-    chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
-      if (tabId === activeTabId && changeInfo.status === 'complete') {
-        loadIsekaiState();
-      }
-    });
-  }
+async function refreshConsent() {
+  const { trackingConsentV2 } = await chrome.storage.local.get("trackingConsentV2");
+  document.getElementById("consent").hidden = trackingConsentV2 === true;
+  if (trackingConsentV2 !== true) {
+    document.getElementById("isekai-card").style.display = "none";
+    document.getElementById("isekai-empty").style.display = "none";
+    document.getElementById("isekai-status-dot").classList.remove("live");
+  } else await updateActiveTabId();
+}
+document.getElementById("accept").addEventListener("click", async () => { await chrome.storage.local.set({ trackingConsentV2: true }); await refreshConsent(); });
+document.getElementById("disable").addEventListener("click", async () => { await chrome.storage.local.set({ trackingConsentV2: false }); await chrome.storage.session.clear(); document.getElementById("privacy-controls").hidden = true; await refreshConsent(); });
+document.getElementById("clear").addEventListener("click", async () => { await chrome.storage.local.remove(["isekai_history", "scrobble_queue"]); await chrome.storage.session.clear(); await loadIsekaiHistory(); await refreshConsent(); });
+document.getElementById("isekai-btn-settings").addEventListener("click", () => { const panel = document.getElementById("privacy-controls"); panel.hidden = !panel.hidden; });
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes.isekai_history) void loadIsekaiHistory();
+  if (area === "local" && changes.trackingConsentV2) void refreshConsent();
+  if (area === "session" && activeTabId && changes[`tab:${activeTabId}`]) void refreshConsent();
 });
+chrome.tabs.onActivated.addListener(() => { void refreshConsent(); });
+void loadIsekaiHistory(); void refreshConsent();

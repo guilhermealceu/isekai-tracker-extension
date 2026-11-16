@@ -34,20 +34,10 @@
       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
       Hub
     </button>
-    <button class="nav-tab" data-tab="projects" id="tab-projects">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-      Projetos
-    </button>
   </nav>
 
   <!-- Content -->
   <main class="content">
-
-    <!-- ======= PROJECTS TAB ======= -->
-    <div class="tab-panel" id="panel-projects">
-      <div class="section-label">Projetos</div>
-      <p class="project-desc">Nenhum projeto listado no momento.</p>
-    </div>
 
     <!-- ======= HUB TAB ======= -->
     <div class="tab-panel" id="panel-hub">
@@ -82,34 +72,23 @@
           <div class="status-dot-isekai" id="isekai-status-dot"></div>
           <span class="section-label" style="padding: 0; margin: 0;">Isekai;Tracker</span>
         </div>
-        <button class="isekai-settings-btn" id="isekai-btn-settings" title="Configurações">
+        <button class="isekai-settings-btn" id="isekai-btn-settings" title="Privacidade" aria-label="Privacidade">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9"/>
           </svg>
         </button>
       </div>
 
-      <!-- Settings Panel (Accordion) -->
-      <div class="isekai-settings-drawer" id="isekai-settings-panel">
-        <div class="isekai-drawer-inner">
-          <div class="isekai-label">Servidor API</div>
-          <div class="isekai-seg" id="isekai-server-selector">
-            <button data-type="production" class="active">Nuvem</button>
-            <button data-type="local">Local</button>
-            <button data-type="custom">Custom</button>
-          </div>
-          <input type="text" class="isekai-url-input" id="isekai-input-url" placeholder="http://192.168.x.x:3005" style="display:none" />
-          <div class="isekai-ping-row">
-            <span>Conexão:</span>
-            <span class="isekai-ping-dot isekai-checking" id="isekai-conn-status">Verificando...</span>
-          </div>
-        </div>
+      <div id="consent" class="consent-card" hidden>
+        <strong>Acompanhar episódios?</strong>
+        <p>Permita a leitura do episódio e progresso na Crunchyroll. Os dados ficam neste navegador; a sincronização está desativada.</p>
+        <button id="accept" class="btn-primary" type="button">Aceitar</button>
+        <a href="privacy_policy.html" target="_blank">Privacidade</a>
       </div>
-
-      <!-- Offline Queue Banner -->
-      <div class="isekai-queue-banner" id="isekai-queue-box">
-        <span id="isekai-queue-text">Scrobbles offline pendentes</span>
-        <button class="isekai-queue-btn" id="isekai-btn-flush">Sincronizar</button>
+      <div id="privacy-controls" class="privacy-controls" hidden>
+        <button id="disable" class="isekai-queue-btn" type="button">Desativar acompanhamento</button>
+        <button id="clear" class="isekai-queue-btn" type="button">Limpar dados locais</button>
+        <a href="privacy_policy.html" target="_blank">Privacidade</a>
       </div>
 
       <!-- Empty State -->
@@ -152,7 +131,7 @@
           </div>
           <div class="isekai-stat-box">
             <span class="isekai-stat-label">Sincronização</span>
-            <span class="isekai-stat-val" style="color: var(--text-secondary);" id="isekai-sync-status">Automática</span>
+            <span class="isekai-stat-val" style="color: var(--text-secondary);" id="isekai-sync-status">Desativada</span>
           </div>
         </div>
       </div>
