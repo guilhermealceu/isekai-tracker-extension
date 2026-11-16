@@ -16,3 +16,5 @@ Por padrão, a extensão envia eventos de reprodução para `https://isekaitrack
 A extensão lê informações do episódio e da reprodução no Crunchyroll, envia eventos ao servidor configurado e mantém informações recentes no armazenamento do navegador. Veja [privacidade](privacy_policy.html). Antes de uso compartilhado, é necessário verificar como o servidor identifica usuários e restringe o acesso aos eventos; a implementação local examinada anteriormente retransmitia eventos sem isolamento por conta.
 
 [Site do IsekaiTracker](https://isekaitracker.runeprojects.com.br/) · [Projeto IsekaiTracker](https://github.com/guilhermealceu/isekaitracker-nextgen8) · [Licença MIT](LICENSE)
+
+O painel abre na aba Isekai;Tracker; a aba Projetos permanece vazia enquanto a lista é revisada. Para voltar à organização anterior, recupere o arquivo `sidepanel.html` do commit anterior.
