@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rune Projects Hub</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="sidepanel.css" />
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-logo">
+      <div class="logo-ring">
+        <img src="https://runestorage.up.railway.app/uploads/logos/1772405817073-51385268.png" alt="Rune Projects" class="logo-img" />
+      </div>
+      <div class="header-text">
+        <span class="header-title">RUNE</span>
+        <span class="header-sub">PROJECTS</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Nav Tabs -->
+  <nav class="quick-nav">
+    <button class="nav-tab active" data-tab="projects" id="tab-projects">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      Projetos
+    </button>
+    <button class="nav-tab" data-tab="hub" id="tab-hub">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Hub
+    </button>
+    <button class="nav-tab" data-tab="isekai" id="tab-isekai">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Isekai;Tracker
+    </button>
+  </nav>
+
+  <!-- Content -->
+  <main class="content">
+
+    <!-- ======= PROJECTS TAB ======= -->
+    <div class="tab-panel active" id="panel-projects">
+
+      <div class="section-label">Ecossistema</div>
+
+      <div class="project-card" id="proj-main">
+        <a href="https://www.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(124,58,237,0.45)">
+            <img src="https://runestorage.up.railway.app/uploads/logos/1772405817073-51385268.png" alt="Rune Projects" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Rune Projects</span>
+            <span class="project-desc">Portal Principal</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-hub">
+        <a href="https://runehub.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(14,165,233,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1773757909596-986606270.png" alt="Rune Hub" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Rune Hub</span>
+            <span class="project-desc">Assinaturas & Marketing</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="divider-label">Aplicativos</div>
+
+      <div class="project-card" id="proj-runewave">
+        <a href="https://runewave.runeprojects.com.br" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(236,72,153,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1775604778049-351670410.png" alt="RuneWave" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">RuneWave</span>
+            <span class="project-desc">Player de Música</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-storystudio">
+        <a href="https://runestorystudio.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(139,92,246,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1772405083373-865194841.png" alt="Rune Story Studio" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Rune Story Studio</span>
+            <span class="project-desc">Criação & Builder</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-storyplayer">
+        <a href="https://runestoryplayer.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(249,115,22,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1772405886477-837092062.png" alt="Rune Story Player" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Rune Story Player</span>
+            <span class="project-desc">Player de Histórias</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-isekai">
+        <a href="https://isekaitracker.runeprojects.com.br" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(16,185,129,0.45)">
+            <img src="https://runestorage.up.railway.app/uploads/logos/1772200248167-904743118.png" alt="Isekai Tracker" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Isekai Tracker</span>
+            <span class="project-desc">Monitoramento de Animes</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-steinstracker">
+        <a href="http://localhost:3030/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(99,102,241,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1776821489034-663165214.png" alt="Steins;Tracker" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Steins;Tracker</span>
+            <span class="project-desc">Monitoramento de Jogos</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-steinsarcade">
+        <a href="https://runehub.runeprojects.com.br/marketplace?project=steins_arcade" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(244,63,94,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1772405923044-418193615.png" alt="Steins;Arcade" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Steins;Arcade</span>
+            <span class="project-desc">Hub de Jogos</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-nxbeats">
+        <a href="https://nxbeats.runeprojects.com.br" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(6,182,212,0.45)">
+            <img src="https://runestorage.up.railway.app/uploads/logos/1773348091113-913887085.png" alt="NxBeats;Project" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">NxBeats;Project</span>
+            <span class="project-desc">Neural Rhythm Game</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-nixieos">
+        <a href="https://runehub.runeprojects.com.br/marketplace?project=nixie_os" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(234,179,8,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1774307104957-3054268.png" alt="NixieOS" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">NixieOS</span>
+            <span class="project-desc">The Next-Gen Web Desktop</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-finanflow">
+        <a href="https://finanflow2026.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(34,197,94,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1773707013895-663398229.png" alt="FinanFlow" class="project-logo" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">FinanFlow</span>
+            <span class="project-desc">Gestão Financeira</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+      <div class="project-card" id="proj-smartrunetools">
+        <a href="https://smartools.runeprojects.com.br/" target="_blank" class="project-link-btn">
+          <div class="project-icon-wrap" style="--glow: rgba(14,165,233,0.45)">
+            <img src="https://runestorage.runeprojects.com.br/uploads/logos/1775093050325-689962662.png" alt="Smart Rune Tools" class="project-logo" data-fallback="🎨" />
+          </div>
+          <div class="project-info">
+            <span class="project-name">Smart Rune Tools</span>
+            <span class="project-desc">Otimização e Conversão Profissional</span>
+          </div>
+          <svg class="project-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- ======= HUB TAB ======= -->
+    <div class="tab-panel" id="panel-hub">
+      <div class="section-label">Rune Hub</div>
+
+      <div class="hub-hero">
+        <img src="https://runestorage.runeprojects.com.br/uploads/logos/1773757909596-986606270.png" alt="Rune Hub" class="hub-hero-logo" />
+        <h2 class="hub-hero-title">Rune Hub</h2>
+        <p class="hub-hero-desc">Central de assinaturas, identidade e marketing do ecossistema Rune Projects.</p>
+        <a href="https://runehub.runeprojects.com.br/" target="_blank" class="btn-primary" id="hub-access-btn">
+          Acessar Rune Hub
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </a>
+      </div>
+
+      <div class="divider-label">Funcionalidades</div>
+
+      <div class="feature-list">
+        <div class="feature-item"><div class="feature-dot" style="background:#7c3aed"></div><span>Assinaturas de Projetos</span></div>
+        <div class="feature-item"><div class="feature-dot" style="background:#0ea5e9"></div><span>Campanhas de Marketing</span></div>
+        <div class="feature-item"><div class="feature-dot" style="background:#ec4899"></div><span>Login Centralizado</span></div>
+        <div class="feature-item"><div class="feature-dot" style="background:#10b981"></div><span>Criação de Personagem</span></div>
+        <div class="feature-item"><div class="feature-dot" style="background:#f97316"></div><span>Loja de Compras</span></div>
+        <div class="feature-item"><div class="feature-dot" style="background:#eab308"></div><span>Integração Universal</span></div>
+      </div>
+    </div>
+
+    <!-- ======= ISEKAI TAB ======= -->
+    <div class="tab-panel" id="panel-isekai">
+      <div class="isekai-header">
+        <div class="isekai-title-wrap">
+          <div class="status-dot-isekai" id="isekai-status-dot"></div>
+          <span class="section-label" style="padding: 0; margin: 0;">Isekai;Tracker</span>
+        </div>
+        <button class="isekai-settings-btn" id="isekai-btn-settings" title="Configurações">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Settings Panel (Accordion) -->
+      <div class="isekai-settings-drawer" id="isekai-settings-panel">
+        <div class="isekai-drawer-inner">
+          <div class="isekai-label">Servidor API</div>
+          <div class="isekai-seg" id="isekai-server-selector">
+            <button data-type="production" class="active">Nuvem</button>
+            <button data-type="local">Local</button>
+            <button data-type="custom">Custom</button>
+          </div>
+          <input type="text" class="isekai-url-input" id="isekai-input-url" placeholder="http://192.168.x.x:3005" style="display:none" />
+          <div class="isekai-ping-row">
+            <span>Conexão:</span>
+            <span class="isekai-ping-dot isekai-checking" id="isekai-conn-status">Verificando...</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Offline Queue Banner -->
+      <div class="isekai-queue-banner" id="isekai-queue-box">
+        <span id="isekai-queue-text">Scrobbles offline pendentes</span>
+        <button class="isekai-queue-btn" id="isekai-btn-flush">Sincronizar</button>
+      </div>
+
+      <!-- Empty State -->
+      <div class="isekai-empty" id="isekai-empty">
+        <div class="isekai-empty-icon">📺</div>
+        <span class="isekai-empty-title">Nenhum episódio detectado</span>
+        <p class="isekai-empty-sub">Abra o Crunchyroll e comece a assistir um anime para iniciar o rastreamento automático.</p>
+        <a href="https://www.crunchyroll.com/" target="_blank" class="btn-primary" style="margin-top: 10px; width: 100%; text-align: center; display: block; text-decoration: none;">
+          Abrir Crunchyroll
+        </a>
+      </div>
+
+      <!-- Now Playing Card -->
+      <div class="isekai-card" id="isekai-card" style="display: none;">
+        <div class="isekai-media-info">
+          <div class="isekai-series" id="isekai-series">—</div>
+          <div class="isekai-episode" id="isekai-episode">—</div>
+          <div class="isekai-badges">
+            <span class="isekai-badge" id="isekai-meta-s" style="display:none"></span>
+            <span class="isekai-badge" id="isekai-meta-e" style="display:none"></span>
+            <span class="isekai-badge isekai-badge-status" id="isekai-status-badge">—</span>
+          </div>
+        </div>
+
+        <div class="isekai-progress-container">
+          <div class="isekai-progress-track">
+            <div class="isekai-progress-fill" id="isekai-progress-fill"></div>
+          </div>
+          <div class="isekai-progress-labels">
+            <span id="isekai-pos">0s</span>
+            <span id="isekai-pct">0%</span>
+            <span id="isekai-dur">—</span>
+          </div>
+        </div>
+
+        <div class="isekai-stats-grid">
+          <div class="isekai-stat-box">
+            <span class="isekai-stat-label">Assistido (Sessão)</span>
+            <span class="isekai-stat-val" id="isekai-acc">0s</span>
+          </div>
+          <div class="isekai-stat-box">
+            <span class="isekai-stat-label">Sincronização</span>
+            <span class="isekai-stat-val" style="color: var(--text-secondary);" id="isekai-sync-status">Automática</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- History Container -->
+      <div class="isekai-history-container" id="isekai-history-container" style="display: none;">
+        <div class="divider-label" style="margin-top: 16px; padding-top: 8px;">Recém Assistidos</div>
+        <div class="isekai-history-list" id="isekai-history-list"></div>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="isekai-disclaimer">
+        Este projeto não possui afiliação ou vínculo com a Crunchyroll.
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>© 2026 Rune Projects</span>
+    <span class="footer-dot">•</span>
+    <span>by Guilherme Dill</span>
+  </footer>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
